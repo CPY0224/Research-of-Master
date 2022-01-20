@@ -2,35 +2,35 @@ tic;
 clc;
 clear;
 close all;
-% ²£¥Í10^6­Óbits¡AÀH¾÷ªº1©M0
+% ç”¢ç”Ÿ10^6å€‹bitsï¼Œéš¨æ©Ÿçš„1å’Œ0
 N=1000000;
-% randn¨ç¼Æ²£¥Í±`ºA¤À§Gªº°°ÀH¾÷¼Æ
-% ³]©wSNRdB½d³ò1~10,¨C1¨ú¤@ÂI
+% randnå‡½æ•¸ç”¢ç”Ÿå¸¸æ…‹åˆ†ä½ˆçš„å½éš¨æ©Ÿæ•¸
+% è¨­å®šSNRdBç¯„åœ1~10,æ¯1å–ä¸€é»
 SNRdB=0:1:10;
-% ¤Ñ½u¼Æ¥Ø
+% å¤©ç·šæ•¸ç›®
 TXNUM=1;
-% ²£¥ÍÂø°T Es,Eb ¦b¦¹¤ñ¸û(­n·|ºâ)
+% ç”¢ç”Ÿé›œè¨Š Es,Eb åœ¨æ­¤æ¯”è¼ƒ(è¦æœƒç®—)
 SNR=10.^(SNRdB/10);%Es
 SNRb=15/16*(10.^((SNRdB)/10));%Eb
 Bits = zeros(1,length(SNR));
 for x = 1:N
-    % ÀH¾÷²£¥Í¾ã¼Æ¡A½d³ò0~1¡A¨ú16¦ì
+    % éš¨æ©Ÿç”¢ç”Ÿæ•´æ•¸ï¼Œç¯„åœ0~1ï¼Œå–16ä½
     Data = randi([0,1],1,16);
     %disp (['Data  : ' num2str(Data)]);
-    eoe = Data(1,1:1); % ¨ú²Ä1¦ì§@¬°818ªº°òÂ¦
+    eoe = Data(1,1:1); % å–ç¬¬1ä½ä½œç‚º818çš„åŸºç¤
     %disp (['eoe   : ' num2str(eoe)]);
-    est = Data(1,2:8); % ¨ú²Ä2-8¦ì§@¬°872ªº°òÂ¦
+    est = Data(1,2:8); % å–ç¬¬2-8ä½ä½œç‚º872çš„åŸºç¤
     %disp (['est   :    ' num2str(est)]);
-    eeo = Data(1,9:16);% ¨ú²Ä9-16¦ì§@¬°881ªº°òÂ¦
+    eeo = Data(1,9:16);% å–ç¬¬9-16ä½ä½œç‚º881çš„åŸºç¤
     %disp (['eeo   :                         ' num2str(eeo)]);
-    % ±N²Ä1¦ì­«½Æ¤K¦¸¨Ó¥Í¦¨818code
+    % å°‡ç¬¬1ä½é‡è¤‡å…«æ¬¡ä¾†ç”Ÿæˆ818code
     if eoe == 0
         eoe_code = repmat(eoe,1,8);
     elseif eoe == 1
         eoe_code = repmat(eoe,1,8);
     end
     %disp (['eoe_code  : ' num2str(eoe_code)]);
-    p = mod(sum(est),2);% §âest¥[Á`°_¨Ó«á°£2¨ú¾l¼Æ
+    p = mod(sum(est),2);% æŠŠeståŠ ç¸½èµ·ä¾†å¾Œé™¤2å–é¤˜æ•¸
     est_code(1,1:7) = est;
     est_code(1,8) = p;
     %disp (['est_code  : ' num2str(est_code)]);
@@ -57,25 +57,25 @@ for x = 1:N
         end
     end
     for k = 1:11
-        % ²£¥ÍÂø°T Es-Ebªº SNR §ï³o¸Ì!!
+        % ç”¢ç”Ÿé›œè¨Š Es-Ebçš„ SNR æ”¹é€™è£¡!!
         noise=TXNUM/(2*SNR(k));
-        % ²£¥ÍAWGN
+        % ç”¢ç”ŸAWGN
         nRe = sqrt(noise)*randn(1,8);
         nIm = sqrt(noise)*randn(1,8);
         for S = 1:8
-            % ±NÂø°T¥[¤J­ì°T¸¹
+            % å°‡é›œè¨ŠåŠ å…¥åŸè¨Šè™Ÿ
             y(1,S) = output(1,S) + (nRe(1,S) + nIm(1,S)*1i);
         end
-        % ²Ä¤@¼h¸Ñ½X
+        % ç¬¬ä¸€å±¤è§£ç¢¼
         for s = 1:8
-            % ¥H0¬°¶}ÀYªº¶ZÂ÷
+            % ä»¥0ç‚ºé–‹é ­çš„è·é›¢
             zoz(1,s) = sum(abs(y(1,s) - (1i))^2);
             zzz(1,s) = sum(abs(y(1,s) - (1))^2);
             zoo(1,s) = sum(abs(y(1,s) - (-1i))^2);
             zzo(1,s) = sum(abs(y(1,s) - (-1))^2);
             z = [zoz;zzz;zoo;zzo];
             zmin(1,s) = min(z(1:4,s));
-            % ¥H1¬°¶}ÀYªº¶ZÂ÷
+            % ä»¥1ç‚ºé–‹é ­çš„è·é›¢
             ozz(1,s) = sum(abs(y(1,s) - (sqrt(2)*(1+1i)))^2);
             ooo(1,s) = sum(abs(y(1,s) - (sqrt(2)*(1-1i)))^2);
             ozo(1,s) = sum(abs(y(1,s) - (sqrt(2)*(-1-1i)))^2);
@@ -87,14 +87,14 @@ for x = 1:N
             elseif sum(zmin) > sum(omin)
                 u1 = 1;
             end
-            % ²Ä¤@¼h8­Óbits
+            % ç¬¬ä¸€å±¤8å€‹bits
             if u1 == 0
                 first_code = [0,0,0,0,0,0,0,0];
             else
                 first_code = [1,1,1,1,1,1,1,1];
             end
         end
-        % ²Ä¤G¼h¸Ñ½X
+        % ç¬¬äºŒå±¤è§£ç¢¼
         zz = [zzz;zzo]; zo = [zoz;zoo];
         oz = [ozz;ozo]; oo = [ooz;ooo];
         for ss = 1:8
@@ -110,52 +110,52 @@ for x = 1:N
                 v = onepk;
             end
         end
-        % ¨C­Óbits©M0¤Î1ªº¶ZÂ÷
-        % ²Ä¤@­ÓBitªº°j°é
+        % æ¯å€‹bitså’Œ0åŠ1çš„è·é›¢
+        % ç¬¬ä¸€å€‹Bitçš„è¿´åœˆ
         au = 0 + v(1,1); ad = 0 + v(2,1);
         as = [au,ad]; minas = min(as);
-        % ²Ä¤G­ÓBitªº°j°é
+        % ç¬¬äºŒå€‹Bitçš„è¿´åœˆ
         buu = au + v(1,2); bud = ad + v(2,2);
         bdu = au + v(2,2); bdd = ad + v(1,2);
         bu = [buu,bud]; minbu = min(bu);
         bd = [bdu,bdd]; minbd = min(bd);
-        % ²Ä¤T­ÓBitªº°j°é
+        % ç¬¬ä¸‰å€‹Bitçš„è¿´åœˆ
         cuu = minbu + v(1,3); cud = minbd + v(2,3);
         cdu = minbu + v(2,3); cdd = minbd + v(1,3);
         cu = [cuu,cud]; mincu = min(cu);
         cd = [cdu,cdd]; mincd = min(cd);
-        % ²Ä¥|­ÓBitªº°j°é
+        % ç¬¬å››å€‹Bitçš„è¿´åœˆ
         duu = mincu + v(1,4); dud = mincd + v(2,4);
         ddu = mincu + v(2,4); ddd = mincd + v(1,4);
         du = [duu,dud]; mindu = min(du);
         dd = [ddu,ddd]; mindd = min(dd);
-        % ²Ä¤­­ÓBitªº°j°é
+        % ç¬¬äº”å€‹Bitçš„è¿´åœˆ
         euu = mindu + v(1,5); eud = mindd + v(2,5);
         edu = mindu + v(2,5); edd = mindd + v(1,5);
         eu = [euu,eud]; mineu = min(eu);
         ed = [edu,edd]; mined = min(ed);
-        % ²Ä¤»­ÓBitªº°j°é
+        % ç¬¬å…­å€‹Bitçš„è¿´åœˆ
         fuu = mineu + v(1,6); fud = mined + v(2,6);
         fdu = mineu + v(2,6); fdd = mined + v(1,6);
         fu = [fuu,fud]; minfu = min(fu);
         fd = [fdu,fdd]; minfd = min(fd);
-        % ²Ä¤C­ÓBitªº°j°é
+        % ç¬¬ä¸ƒå€‹Bitçš„è¿´åœˆ
         guu = minfu + v(1,7); gud = minfd + v(2,7);
         gdu = minfu + v(2,7); gdd = minfd + v(1,7);
         gu = [guu,gud]; mingu = min(gu);
         gd = [gdu,gdd]; mingd = min(gd);
-        % ²Ä¤K­ÓBitªº°j°é
+        % ç¬¬å…«å€‹Bitçš„è¿´åœˆ
         hu = mingu + v(1,8); hd = mingd + v(2,8);
         hf = [hu,hd]; minhf = min(hf);
-        % ±N©Ò¦³­È¨ú¦¨¤@°}¦C
+        % å°‡æ‰€æœ‰å€¼å–æˆä¸€é™£åˆ—
         P = [au buu cuu duu euu fuu guu hu;
              au bud cud dud eud fud gud hu;
              ad bdu cdu cdu edu fdu gdu hd;
              ad bdd cdd ddd edd fdd gdd hd];
-        % ±N³Ì¤p­È¦s¦¨¤@­Ó°}¦C
+        % å°‡æœ€å°å€¼å­˜æˆä¸€å€‹é™£åˆ—
         PM = [0 minbu mincu mindu mineu minfu mingu minhf;
               1 minbd mincd mindd mined minfd mingd 100];
-        % ¶}©l§P§O³o¨Ç­È¸Ó¨«0ÁÙ¬O1
+        % é–‹å§‹åˆ¤åˆ¥é€™äº›å€¼è©²èµ°0é‚„æ˜¯1
         for p = 8:-1:1
             if PM(1,p) == P(1:1,p)
                 bu(1,p) = 0;
@@ -175,12 +175,12 @@ for x = 1:N
             bu(1,1) = 0;
             bd(1,1) = 1;
             bd(1,8) = 100;
-            % ±N§P§O¹L«áªº0©Î¬O1¦A¦s¦¨¤@°}¦C
+            % å°‡åˆ¤åˆ¥éå¾Œçš„0æˆ–æ˜¯1å†å­˜æˆä¸€é™£åˆ—
             array = [bu;bd];
         end
-            % ¶}©l§ä³Ì¨Î¸ô®|¡A­Y¹J¨ì0ª½¨«¹J¨ì1±×¨«
-            P = 0;% ¦¹¬°¦æ¼Æ¡A0¬°²Ä1¦æ¡A1¬°²Ä¤G¦æ
-            X = 0;% ¦¹¬°§PÂ_¦³¨S¦³¶]¹L¡A0¬°¨S¶]¹L¡A1¬°¶]¹L
+            % é–‹å§‹æ‰¾æœ€ä½³è·¯å¾‘ï¼Œè‹¥é‡åˆ°0ç›´èµ°é‡åˆ°1æ–œèµ°
+            P = 0;% æ­¤ç‚ºè¡Œæ•¸ï¼Œ0ç‚ºç¬¬1è¡Œï¼Œ1ç‚ºç¬¬äºŒè¡Œ
+            X = 0;% æ­¤ç‚ºåˆ¤æ–·æœ‰æ²’æœ‰è·‘éï¼Œ0ç‚ºæ²’è·‘éï¼Œ1ç‚ºè·‘é
             for pp = 8:-1:1
                 if P == 0
                     if array(1,pp) == 0
@@ -204,7 +204,7 @@ for x = 1:N
                 X = 0;
             end
             VS = [bu;bd;second_code;est_code];
-            % ²Ä¤T¼h¸Ñ½X
+            % ç¬¬ä¸‰å±¤è§£ç¢¼
             zz = [zzz;zzo]; zo = [zoz;zoo];
             oz = [ozz;ozo]; oo = [ooz;ooo];
             first_and_second = [first_code;second_code];
@@ -228,21 +228,21 @@ for x = 1:N
             end
             BCM_code = [first_code;second_code;third_code];
             BCM_DATA = [u1,second_code(1,1:7),third_code];
-            % ²Î­p¿ù»~ªºbits¼Æ¡Aºâ¥X¿ù»~²v¨Ã­pºâ¿ù»~²v©M°TÂø¤ñªºÃö«Y
+            % çµ±è¨ˆéŒ¯èª¤çš„bitsæ•¸ï¼Œç®—å‡ºéŒ¯èª¤ç‡ä¸¦è¨ˆç®—éŒ¯èª¤ç‡å’Œè¨Šé›œæ¯”çš„é—œä¿‚
             Re = sum(abs(Data(1,16) - BCM_DATA(1,16)));
             E = Re;
             Error(k) = E;
     end
-    % ¿ù»~Á`bits¼Æ,¨Ã°O¿ı¦btotalE.
+    % éŒ¯èª¤ç¸½bitsæ•¸,ä¸¦è¨˜éŒ„åœ¨totalE.
     Bits = Bits + Error;
     BER = Bits/N;
 end
-% semilogy¨ç¼Æ¥i¥H¨Ï¥Îy¶bªº¹ï¼Æ¨è«×Ã¸»s¼Æ¾Ú
+% semilogyå‡½æ•¸å¯ä»¥ä½¿ç”¨yè»¸çš„å°æ•¸åˆ»åº¦ç¹ªè£½æ•¸æ“š
 figure
 semilogy(SNRdB,BER,'B-V');
 grid on ;
 legend('BCM');
-% ±N¦±½u¹Ï¤§¼ĞÃD¡AX¶b¡AY¶b¦U§@¼Ğ¥Ü
+% å°‡æ›²ç·šåœ–ä¹‹æ¨™é¡Œï¼ŒXè»¸ï¼ŒYè»¸å„ä½œæ¨™ç¤º
 title('Curve for BCM');
 xlabel('Es/N0');
 ylabel('BER');

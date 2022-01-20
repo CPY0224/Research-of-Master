@@ -2,21 +2,21 @@ tic;
 clc;
 clear;
 close all;
-% ²£¥Í10^6­Óbits¡AÀH¾÷ªº1©M0
+% ç”¢ç”Ÿ10^6å€‹bitsï¼Œéš¨æ©Ÿçš„1å’Œ0
 N=1000000;
-% randn¨ç¼Æ²£¥Í±`ºA¤À§Gªº°°ÀH¾÷¼Æ
-% ³]©wSNRdB½d³ò1~10,¨C1¨ú¤@ÂI
+% randnå‡½æ•¸ç”¢ç”Ÿå¸¸æ…‹åˆ†ä½ˆçš„å½éš¨æ©Ÿæ•¸
+% è¨­å®šSNRdBç¯„åœ1~10,æ¯1å–ä¸€é»
 SNRdB=0:1:25;
-% ¤Ñ½u¼Æ¥Ø
+% å¤©ç·šæ•¸ç›®
 TXNUM=1;
-% ²£¥ÍÂø°T Es,Eb ¦b¦¹¤ñ¸û(­n·|ºâ)
+% ç”¢ç”Ÿé›œè¨Š Es,Eb åœ¨æ­¤æ¯”è¼ƒ(è¦æœƒç®—)
 SNR=10.^(SNRdB/10);%Eb
 SNRb=1/2*(10.^((SNRdB)/10));%Es
-% BER²z½×­È
+% BERç†è«–å€¼
 BPSK = 1/2*erfc(sqrt(SNR));
 Bits = zeros(1,length(SNR));
 for x = 1:N
-    % ½s½X¡AMo¬°½s½X«áªºµ²ªG
+    % ç·¨ç¢¼ï¼ŒMoç‚ºç·¨ç¢¼å¾Œçš„çµæœ
     a = randn(1,1);
     b = randn(1,1);
     Si = a+b*1i;
@@ -36,22 +36,22 @@ for x = 1:N
     So = amo+bmo*1i;
     % Rayleigh fading channel
     sys_ray = sqrt(0.5)*( randn(1,1) + 1i*randn(1,1) );
-    % ±N¹p§Q³q¹D¥[¤J°T¸¹
+    % å°‡é›·åˆ©é€šé“åŠ å…¥è¨Šè™Ÿ
     ray_So = So*sys_ray;
     for k = 1:26
-        % ²£¥ÍÂø°T Es-Ebªº SNR §ï³o¸Ì!!
+        % ç”¢ç”Ÿé›œè¨Š Es-Ebçš„ SNR æ”¹é€™è£¡!!
         noise=TXNUM/(2*SNR(k));
-        % ²£¥ÍAWGN
+        % ç”¢ç”ŸAWGN
         n1 = sqrt(noise)*randn(1,1);
         n2 = sqrt(noise)*randn(1,1);
-        % ±NÂø°T¥[¤J¤w¥]§t¹p§Q³q¹Dªº°T¸¹
+        % å°‡é›œè¨ŠåŠ å…¥å·²åŒ…å«é›·åˆ©é€šé“çš„è¨Šè™Ÿ
         ray_So_AWGN = ray_So + (n1+n2*1i);
-        % ¤w¥[¤J¹p§Q³q¹Dªº­ì©lÂI
+        % å·²åŠ å…¥é›·åˆ©é€šé“çš„åŸå§‹é»
         ray_oo = (sqrt(2)*(+1+1i))*sys_ray; %11
         ray_zo = (sqrt(2)*(-1+1i))*sys_ray; %01
         ray_zz = (sqrt(2)*(-1-1i))*sys_ray; %00       
         ray_oz = (sqrt(2)*(+1-1i))*sys_ray; %10
-        % ¸Ñ½X¡ADemo¬°¸Ñ½X«áªºµ²ªG
+        % è§£ç¢¼ï¼ŒDemoç‚ºè§£ç¢¼å¾Œçš„çµæœ
         r_ray_oo = sum(abs(ray_So_AWGN - ray_oo)^2);
         r_ray_zo = sum(abs(ray_So_AWGN - ray_zo)^2);
         r_ray_zz = sum(abs(ray_So_AWGN - ray_zz)^2);
@@ -78,23 +78,23 @@ for x = 1:N
         end
         Demo1 = Demo(1,1);
         Demo2 = Demo(1,2);
-        % ²Î­p¿ù»~ªºbits¼Æ¡Aºâ¥X¿ù»~²v¨Ã­pºâ¿ù»~²v©M°TÂø¤ñªºÃö«Y
+        % çµ±è¨ˆéŒ¯èª¤çš„bitsæ•¸ï¼Œç®—å‡ºéŒ¯èª¤ç‡ä¸¦è¨ˆç®—éŒ¯èª¤ç‡å’Œè¨Šé›œæ¯”çš„é—œä¿‚
         Re = sum(abs(Mo1(1,1) - Demo1(1,1)));
         Im = sum(abs(Mo2(1,1) - Demo2(1,1)));
-        %¿ù»~Á`bits¼Æ,¨Ã°O¿ı¦btotalE.
+        %éŒ¯èª¤ç¸½bitsæ•¸,ä¸¦è¨˜éŒ„åœ¨totalE.
         E = Re + Im;
         Error(k) = E;
     end
     Bits = Bits + Error;
     BER = Bits/(N);
 end
-% semilogy¨ç¼Æ¥i¥H¨Ï¥Îy¶bªº¹ï¼Æ¨è«×Ã¸»s¼Æ¾Ú
+% semilogyå‡½æ•¸å¯ä»¥ä½¿ç”¨yè»¸çš„å°æ•¸åˆ»åº¦ç¹ªè£½æ•¸æ“š
 figure
 semilogy(SNRdB,BER, 'B-V');
 grid on ;
 legend('QPSK add Rayleigh');
 axis([0 25 10^-6 10^0]);
-% ±N¦±½u¹Ï¤§¼ĞÃD¡AX¶b¡AY¶b¦U§@¼Ğ¥Ü
+% å°‡æ›²ç·šåœ–ä¹‹æ¨™é¡Œï¼ŒXè»¸ï¼ŒYè»¸å„ä½œæ¨™ç¤º
 title('Curve for BER v.s SNR for QPSK add fading channel');
 xlabel('Eb/N0');
 ylabel('BER');

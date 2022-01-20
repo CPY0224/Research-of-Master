@@ -2,23 +2,23 @@ tic;
 clc;
 clear;
 close all;
-% ²£¥Í10^6­Óbits¡AÀH¾÷ªº1©M0
+% ç”¢ç”Ÿ10^6å€‹bitsï¼Œéš¨æ©Ÿçš„1å’Œ0
 N=1000000;
-% randn¨ç¼Æ²£¥Í±`ºA¤À§Gªº°°ÀH¾÷¼Æ
-% ³]©wSNRdB½d³ò0~25,¨C1¨ú¤@ÂI
+% randnå‡½æ•¸ç”¢ç”Ÿå¸¸æ…‹åˆ†ä½ˆçš„å½éš¨æ©Ÿæ•¸
+% è¨­å®šSNRdBç¯„åœ0~25,æ¯1å–ä¸€é»
 SNRdB=0:1:25;
-% ¤Ñ½u¼Æ¥Ø
+% å¤©ç·šæ•¸ç›®
 TXNUM=2;
-% ²£¥ÍÂø°T Es,Eb ¦b¦¹¤ñ¸û(­n·|ºâ)
+% ç”¢ç”Ÿé›œè¨Š Es,Eb åœ¨æ­¤æ¯”è¼ƒ(è¦æœƒç®—)
 SNR=10.^(SNRdB/10);%Es
 SNRb=2*(10.^((SNRdB)/10));%Eb
-% BER²z½×­È
+% BERç†è«–å€¼
 BPSK = 1/2*erfc(sqrt(SNR));
 Bits = zeros(1,length(SNR));
-% ¬İ¶]´X­Óbits¡A°£¥H´X
+% çœ‹è·‘å¹¾å€‹bitsï¼Œé™¤ä»¥å¹¾
 B = 4;
 for x = 1:(1/B)*N 
-    % ½s½X¡AMo¬°½s½X«áªºµ²ªG
+    % ç·¨ç¢¼ï¼ŒMoç‚ºç·¨ç¢¼å¾Œçš„çµæœ
     s = randn(1,4);
     for xx = 1:1:4
         if s(1,xx) > 0
@@ -34,25 +34,25 @@ for x = 1:(1/B)*N
     si2 = (1/sqrt(2))*(TX(1,3) + TX(1,4)*1i);
     % Rayleigh fading channel
     sys_ray = sqrt(0.5)*(randn(1,4) + randn(1,4)*1i);
-    % ±N¹p§Q³q¹D¥[¤J°T¸¹
+    % å°‡é›·åˆ©é€šé“åŠ å…¥è¨Šè™Ÿ
     r_ray = [si1,si2;-(conj(si2)),conj(si1)]*[sys_ray(1,1),sys_ray(1,2);sys_ray(1,3),sys_ray(1,4)];
     for k = 1:26
-        % ²£¥ÍÂø°T Es-Ebªº SNR §ï³o¸Ì!!
+        % ç”¢ç”Ÿé›œè¨Š Es-Ebçš„ SNR æ”¹é€™è£¡!!
         noise=TXNUM/(2*SNRb(k));
-        % ²£¥ÍAWGN
+        % ç”¢ç”ŸAWGN
         n = sqrt(noise)*randn(1,8);
-        % ±NÂø°T¥[¤J¤w¥]§t¹p§Q³q¹Dªº°T¸¹
+        % å°‡é›œè¨ŠåŠ å…¥å·²åŒ…å«é›·åˆ©é€šé“çš„è¨Šè™Ÿ
         AWGN_array = [n(1,1) + n(1,2)*1i,n(1,3) + n(1,4)*1i;n(1,5) + n(1,6)*1i,n(1,7) + n(1,8)*1i];
         r = r_ray + AWGN_array;
-        % ¶}©l°µs1,s2°T¸¹ªº½s¨î
+        % é–‹å§‹åšs1,s2è¨Šè™Ÿçš„ç·¨åˆ¶
         temp = zeros(15,4);
         for kk = 1:1:15
-            xor(kk,1) = bitxor(0,kk);% ¤G¶i¦ìÂà¤Q¶i¦ì¥[ªk¡A¥Ñ0¶}©l¥[¡A¨C¦¸¥[1¡A¥[§¹«á¬°¤Q¶i¦ì
-            xor_char = dec2bin(xor);% ±N¥[§¹«áªº¤Q¶i¦ì¼Æ¦r¦AÂà¦¨¤G¶i¦ì¦r¤¸(char)
+            xor(kk,1) = bitxor(0,kk);% äºŒé€²ä½è½‰åé€²ä½åŠ æ³•ï¼Œç”±0é–‹å§‹åŠ ï¼Œæ¯æ¬¡åŠ 1ï¼ŒåŠ å®Œå¾Œç‚ºåé€²ä½
+            xor_char = dec2bin(xor);% å°‡åŠ å®Œå¾Œçš„åé€²ä½æ•¸å­—å†è½‰æˆäºŒé€²ä½å­—å…ƒ(char)
         end
         for rol = 1:1:15
             for col = 1:1:4
-                temp(rol,col) = xor_char(rol,col) - '0';% ¥Ñ©óASCII½s½XªºÃö«Y¡A»İ­n´î±¼0¤~¯à±N¦r¤¸(char)Âà¦¨¾ã¼Æ(int)
+                temp(rol,col) = xor_char(rol,col) - '0';% ç”±æ–¼ASCIIç·¨ç¢¼çš„é—œä¿‚ï¼Œéœ€è¦æ¸›æ‰0æ‰èƒ½å°‡å­—å…ƒ(char)è½‰æˆæ•´æ•¸(int)
             end
         end
         array = [0,0,0,0;temp];
@@ -73,22 +73,22 @@ for x = 1:(1/B)*N
                 so = array(kkkk,1:4);
             end
         end
-        % ²Î­p¿ù»~ªºbits¼Æ¡Aºâ¥X¿ù»~²v¨Ã­pºâ¿ù»~²v©M°TÂø¤ñªºÃö«Y
+        % çµ±è¨ˆéŒ¯èª¤çš„bitsæ•¸ï¼Œç®—å‡ºéŒ¯èª¤ç‡ä¸¦è¨ˆç®—éŒ¯èª¤ç‡å’Œè¨Šé›œæ¯”çš„é—œä¿‚
         error_bits = sum(abs(si - so));
-        % ¿ù»~Á`bits¼Æ
+        % éŒ¯èª¤ç¸½bitsæ•¸
         E = error_bits;
         Error(k) = E;
     end
     Bits = Bits + Error;
     BER = Bits/(N);
 end
-% semilogy¨ç¼Æ¥i¥H¨Ï¥Îy¶bªº¹ï¼Æ¨è«×Ã¸»s¼Æ¾Ú
+% semilogyå‡½æ•¸å¯ä»¥ä½¿ç”¨yè»¸çš„å°æ•¸åˆ»åº¦ç¹ªè£½æ•¸æ“š
 figure
 semilogy(SNRdB,BER, 'B-V');
 grid on ;
 legend('Alamouti STBC 2X2');
 axis([0 25 10^-6 10^0]);
-% ±N¦±½u¹Ï¤§¼ĞÃD¡AX¶b¡AY¶b¦U§@¼Ğ¥Ü
+% å°‡æ›²ç·šåœ–ä¹‹æ¨™é¡Œï¼ŒXè»¸ï¼ŒYè»¸å„ä½œæ¨™ç¤º
 title('Alamouti STBC 2X2,CR=2');
 xlabel('Eb/N0');
 ylabel('BER');

@@ -2,24 +2,24 @@ tic;
 clc;
 clear;
 close all;
-% ²£¥Í10^6­Óbits¡AÀH¾÷ªº1©M0
+% ç”¢ç”Ÿ10^6å€‹bitsï¼Œéš¨æ©Ÿçš„1å’Œ0
 N=1000000;
-% randn¨ç¼Æ²£¥Í±`ºA¤À§Gªº°°ÀH¾÷¼Æ
-% ³]©wSNRdB½d³ò1~10,¨C1¨ú¤@ÂI
+% randnå‡½æ•¸ç”¢ç”Ÿå¸¸æ…‹åˆ†ä½ˆçš„å½éš¨æ©Ÿæ•¸
+% è¨­å®šSNRdBç¯„åœ1~10,æ¯1å–ä¸€é»
 SNRdB=0:1:10;
-% ¤Ñ½u¼Æ¥Ø
+% å¤©ç·šæ•¸ç›®
 TXNUM=1;
-% ²£¥ÍÂø°T Es,Eb ¦b¦¹¤ñ¸û(­n·|ºâ)¡AQPSK¸ò313«áªº Eb,Es ¬Û¤Ï
+% ç”¢ç”Ÿé›œè¨Š Es,Eb åœ¨æ­¤æ¯”è¼ƒ(è¦æœƒç®—)ï¼ŒQPSKè·Ÿ313å¾Œçš„ Eb,Es ç›¸å
 SNR=10.^(SNRdB/10);%Eb
 SNRb=1/2*(10.^((SNRdB)/10));%Es
-% BER²z½×­È
+% BERç†è«–å€¼
 TheoryBER = 1/2*erfc(sqrt(SNR));
 Bits = zeros(1,length(SNR));
 for x = 1:0.5*N
 a = randn;
 b = randn;
 Si = a+b*1i;
-% ½s½X¡AMo¬°½s½X«áªºµ²ªG
+% ç·¨ç¢¼ï¼ŒMoç‚ºç·¨ç¢¼å¾Œçš„çµæœ
 if a>0
    Mo1=1;
 else
@@ -34,16 +34,16 @@ amo = 2*Mo1-1;
 bmo = 2*Mo2-1;
 So = amo+bmo*1i;
     for k = 1:11
-    % ²£¥ÍÂø°T Es-Ebªº SNR §ï³o¸Ì!!
+    % ç”¢ç”Ÿé›œè¨Š Es-Ebçš„ SNR æ”¹é€™è£¡!!
     noise=TXNUM/(2*SNR(k));
-    % ²£¥ÍAWGN
+    % ç”¢ç”ŸAWGN
     n1 = sqrt(noise)*randn(1,1);
     n2 = sqrt(noise)*randn(1,1);
-    % ±NÂø°T¥[¤J­ì°T¸¹
+    % å°‡é›œè¨ŠåŠ å…¥åŸè¨Šè™Ÿ
     y1=amo+n1;
     y2=bmo+n2;
     Wi=y1+y2*1j;
-    % ¸Ñ½X¡ADemo¬°¸Ñ½X«áªºµ²ªG
+    % è§£ç¢¼ï¼ŒDemoç‚ºè§£ç¢¼å¾Œçš„çµæœ
     if y1>0
         Demo1=1;
     else
@@ -57,22 +57,22 @@ So = amo+bmo*1i;
     ademo=2*Demo1-1;
     bdemo=2*Demo2-1;
     Wo = ademo+bdemo*1j;
-    % ²Î­p¿ù»~ªºbits¼Æ¡Aºâ¥X¿ù»~²v¨Ã­pºâ¿ù»~²v©M°TÂø¤ñªºÃö«Y
+    % çµ±è¨ˆéŒ¯èª¤çš„bitsæ•¸ï¼Œç®—å‡ºéŒ¯èª¤ç‡ä¸¦è¨ˆç®—éŒ¯èª¤ç‡å’Œè¨Šé›œæ¯”çš„é—œä¿‚
     Re = sum(abs(Mo1(1,1)- Demo1(1,1)));
     Im = sum(abs(Mo2(1,1)- Demo2(1,1)));
-    %¿ù»~Á`bits¼Æ,¨Ã°O¿ı¦btotalE.
+    %éŒ¯èª¤ç¸½bitsæ•¸,ä¸¦è¨˜éŒ„åœ¨totalE.
     E = Re + Im;
     Error(k) = E;
     end
 Bits = Bits + Error;
 BER = Bits/(N);
 end
-% semilogy¨ç¼Æ¥i¥H¨Ï¥Îy¶bªº¹ï¼Æ¨è«×Ã¸»s¼Æ¾Ú
+% semilogyå‡½æ•¸å¯ä»¥ä½¿ç”¨yè»¸çš„å°æ•¸åˆ»åº¦ç¹ªè£½æ•¸æ“š
 figure
 semilogy(SNRdB,BER, 'B-V' ,SNRdB,TheoryBER, 'M-X' );
 grid on ;
 legend('QPSK' , 'BPSK');
-% ±N¦±½u¹Ï¤§¼ĞÃD¡AX¶b¡AY¶b¦U§@¼Ğ¥Ü
+% å°‡æ›²ç·šåœ–ä¹‹æ¨™é¡Œï¼ŒXè»¸ï¼ŒYè»¸å„ä½œæ¨™ç¤º
 title('Curve for BER v.s SNR for QPSK modulation');
 xlabel('Eb/N0');
 ylabel('BER');

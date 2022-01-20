@@ -2,15 +2,15 @@ tic;
 clc;
 clear;
 close all;
-% ²£¥Í10^6­Óbits¡AÀH¾÷ªº1©M-1
+% ç”¢ç”Ÿ10^6å€‹bitsï¼Œéš¨æ©Ÿçš„1å’Œ-1
 N=10^6;
-% randn¨ç¼Æ²£¥Í±`ºA¤À§Gªº°°ÀH¾÷¼Æ
+% randnå‡½æ•¸ç”¢ç”Ÿå¸¸æ…‹åˆ†ä½ˆçš„å½éš¨æ©Ÿæ•¸
 for x = 1:N
 a(x) = randn;
 b(x) = randn;
 end
 Si = a+b*1i;
-% ½s½X¡AMo¬°½s½X«áªºµ²ªG
+% ç·¨ç¢¼ï¼ŒMoç‚ºç·¨ç¢¼å¾Œçš„çµæœ
 if a>0
    Mo1=1;
 else
@@ -24,13 +24,13 @@ end
 amo = 2*Mo1-1;
 bmo = 2*Mo2-1;
 So = amo+bmo*1i;
-% ²£¥Í°ª´µ¥Õ¾¸Án
-% °TÂø¤ñ½d³ò1~10,¨C1¨ú¤@ÂI
+% ç”¢ç”Ÿé«˜æ–¯ç™½å™ªè²
+% è¨Šé›œæ¯”ç¯„åœ1~10,æ¯1å–ä¸€é»
 SNRdB=0:1:10;
-% °TÂø¤ñÂà¤Æ¬°½u©Ê­È
+% è¨Šé›œæ¯”è½‰åŒ–ç‚ºç·šæ€§å€¼
 SNR=10.^(SNRdB/10);
-% °w¹ï¥H¤Wªº±¡ªpªº11ºØ°TÂø¤ñ¥[¤JAWGN
-% sigma¨ç¼Æ¬Û·í©ósum(1:11)
+% é‡å°ä»¥ä¸Šçš„æƒ…æ³çš„11ç¨®è¨Šé›œæ¯”åŠ å…¥AWGN
+% sigmaå‡½æ•¸ç›¸ç•¶æ–¼sum(1:11)
 for k = 1:11
     sigma = sqrt(1/(2*SNR(k)));
 for x = 1:N
@@ -41,7 +41,7 @@ y2(x)=bmo+n2(x);
 Wi=y1(x)+y2(x)*1j;
 D(x)=abs((y1(x)-amo)+(y2(x)-bmo));
 end
-% ¸Ñ½X¡ADemo¬°¸Ñ½X«áªºµ²ªG
+% è§£ç¢¼ï¼ŒDemoç‚ºè§£ç¢¼å¾Œçš„çµæœ
 Bits(k) = 0;
 for x = 1:N
     if y1(x)>0
@@ -57,7 +57,7 @@ for x = 1:N
 ademo=2*Demo1-1;
 bdemo=2*Demo2-1;
 Wo = ademo+bdemo*1j;
-% ²Î­p¿ù»~ªºbits¼Æ¡Aºâ¥X¿ù»~²v¨Ã­pºâ¿ù»~²v©M°TÂø¤ñªºÃö«Y
+% çµ±è¨ˆéŒ¯èª¤çš„bitsæ•¸ï¼Œç®—å‡ºéŒ¯èª¤ç‡ä¸¦è¨ˆç®—éŒ¯èª¤ç‡å’Œè¨Šé›œæ¯”çš„é—œä¿‚
 if  ademo ~= amo
     Bits(k) = Bits(k)+1;
 elseif bdemo ~= bmo
@@ -67,12 +67,12 @@ end
     BER(k) = (Bits(k)*1/2)/N;
     TheoryBER(k) = 1/2*erfc(sqrt(10.^(SNRdB(k)/10)));
 end
-% semilogy¨ç¼Æ¥i¥H¨Ï¥Îy¶bªº¹ï¼Æ¨è«×Ã¸»s¼Æ¾Ú
+% semilogyå‡½æ•¸å¯ä»¥ä½¿ç”¨yè»¸çš„å°æ•¸åˆ»åº¦ç¹ªè£½æ•¸æ“š
 figure
 semilogy(SNRdB,BER, 'B-V' ,SNRdB,TheoryBER, 'M-X' );
 grid on ;
-legend('¿ù»~²v¹êÅç­È¦±½u' , '¿ù»~²v²z½×­È¦±½u');
-% ±N¦±½u¹Ï¤§¼ĞÃD¡AX¶b¡AY¶b¦U§@¼Ğ¥Ü
+legend('éŒ¯èª¤ç‡å¯¦é©—å€¼æ›²ç·š' , 'éŒ¯èª¤ç‡ç†è«–å€¼æ›²ç·š');
+% å°‡æ›²ç·šåœ–ä¹‹æ¨™é¡Œï¼ŒXè»¸ï¼ŒYè»¸å„ä½œæ¨™ç¤º
 title('Curve for BER v.s SNR for QPSK modulation');
 xlabel('Eb/N0');
 ylabel('BER');

@@ -2,22 +2,22 @@ tic;
 clc;
 clear;
 close all;
-% ²£¥Í10^6­Óbits¡AÀH¾÷ªº1©M0
+% ç”¢ç”Ÿ10^6å€‹bitsï¼Œéš¨æ©Ÿçš„1å’Œ0
 N=1000000;
-% randn¨ç¼Æ²£¥Í±`ºA¤À§Gªº°°ÀH¾÷¼Æ
-% ³]©wSNRdB½d³ò1~10,¨C1¨ú¤@ÂI
+% randnå‡½æ•¸ç”¢ç”Ÿå¸¸æ…‹åˆ†ä½ˆçš„å½éš¨æ©Ÿæ•¸
+% è¨­å®šSNRdBç¯„åœ1~10,æ¯1å–ä¸€é»ž
 SNRdB=0:1:10;
-% ¤Ñ½u¼Æ¥Ø
+% å¤©ç·šæ•¸ç›®
 TXNUM=1;
-% ²£¥ÍÂø°T Es,Eb ¦b¦¹¤ñ¸û(­n·|ºâ)
+% ç”¢ç”Ÿé›œè¨Š Es,Eb åœ¨æ­¤æ¯”è¼ƒ(è¦æœƒç®—)
 SNR=10.^((SNRdB)/10);%Es
 SNRb=1/8*(10.^((SNRdB)/10));%Eb
-% BER²z½×­È
+% BERç†è«–å€¼
 TheoryBER = 1/2*erfc(sqrt(SNR));
 Bits = zeros(1,length(SNR));
 for x = 1:N
 a = randn;
-% ½s½X¡AM¬°½s½X«áªºµ²ªG
+% ç·¨ç¢¼ï¼ŒMç‚ºç·¨ç¢¼å¾Œçš„çµæžœ
 if a > 0
    TX = 1;
 else
@@ -26,9 +26,9 @@ end
 Mo = repmat(TX,1,8);
 S(Mo>0)=1;S(Mo<=0)=-1;
 for k = 1:11
-% ²£¥ÍÂø°T Es-Ebªº SNR §ï³o¸Ì!!
+% ç”¢ç”Ÿé›œè¨Š Es-Ebçš„ SNR æ”¹é€™è£¡!!
 noise=TXNUM/(2*SNRb(k));
-% ²£¥ÍAWGN
+% ç”¢ç”ŸAWGN
 n1 = sqrt(noise)*randn;
 n2 = sqrt(noise)*randn;
 n3 = sqrt(noise)*randn;
@@ -38,36 +38,36 @@ n6 = sqrt(noise)*randn;
 n7 = sqrt(noise)*randn;
 n8 = sqrt(noise)*randn;
 AWGN = [n1,n2,n3,n4,n5,n6,n7,n8];
-% ±NÂø°T¥[¤J­ì°T¸¹
+% å°‡é›œè¨ŠåŠ å…¥åŽŸè¨Šè™Ÿ
 Y = S + AWGN;
-% ¸Ñ½X¡ADemo¬°¸Ñ½X«áªºµ²ªG
+% è§£ç¢¼ï¼ŒDemoç‚ºè§£ç¢¼å¾Œçš„çµæžœ
 D(Y>0)=1;D(Y<=0)=-1;
 Demo(D>0)=1;Demo(D<0)=0;
-% ²Î­p¶ZÂ÷Ãö«Y¡A¨Ã¨D¥X³Ì¤p¶ZÂ÷
+% çµ±è¨ˆè·é›¢é—œä¿‚ï¼Œä¸¦æ±‚å‡ºæœ€å°è·é›¢
 Dis1 = sum(abs(Y - [1,1,1,1,1,1,1,1]));
 Dis2 = sum(abs(Y - [-1,-1,-1,-1,-1,-1,-1,-1]));
 Distance = [Dis1,Dis2];
 [minDis,Number] = min(Distance);
-% ²Î­p¿ù»~ªºbits¼Æ¡Aºâ¥X¿ù»~²v¨Ã­pºâ¿ù»~²v©M°TÂø¤ñªºÃö«Y
+% çµ±è¨ˆéŒ¯èª¤çš„bitsæ•¸ï¼Œç®—å‡ºéŒ¯èª¤çŽ‡ä¸¦è¨ˆç®—éŒ¯èª¤çŽ‡å’Œè¨Šé›œæ¯”çš„é—œä¿‚
 if Dis1 == minDis
     RX = 1;
 elseif Dis2 == minDis
     RX = 0;
 end
 Re = sum(abs(TX(1,1)- RX(1,1)));
-% ¿ù»~Á`bits¼Æ,¨Ã°O¿ý¦btotalE.
+% éŒ¯èª¤ç¸½bitsæ•¸,ä¸¦è¨˜éŒ„åœ¨totalE.
 E = Re;
 Error(k) = E;
 end
 Bits = Bits + Error; 
 BER = Bits/(N);
 end
-% semilogy¨ç¼Æ¥i¥H¨Ï¥Îy¶bªº¹ï¼Æ¨è«×Ã¸»s¼Æ¾Ú
+% semilogyå‡½æ•¸å¯ä»¥ä½¿ç”¨yè»¸çš„å°æ•¸åˆ»åº¦ç¹ªè£½æ•¸æ“š
 figure
 semilogy(SNRdB,BER,'B-V',SNRdB,TheoryBER,'R-O');
 grid on ;
 legend('818','BPSK');
-% ±N¦±½u¹Ï¤§¼ÐÃD¡AX¶b¡AY¶b¦U§@¼Ð¥Ü
+% å°‡æ›²ç·šåœ–ä¹‹æ¨™é¡Œï¼ŒXè»¸ï¼ŒYè»¸å„ä½œæ¨™ç¤º
 title('Curve for BCM code');
 xlabel('Eb/N0');
 ylabel('BER');
